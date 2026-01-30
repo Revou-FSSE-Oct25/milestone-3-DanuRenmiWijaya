@@ -9,10 +9,14 @@ In this project, i build some e-commerce website called ReVoShop. You can choose
 
 ## 🛠️ Tech Stack
 
-- **Language:** [ JavaScript, TypeScript]
-- **Framework/Library:** [React, Lucide]
-- **Database:** -
-- **Tools:** [Netlify, Git]
+## 🛠️ Tech Stack
+
+- **Framework:** [Next.js 16 (App Router)](https://nextjs.org)
+- **Library:** [React 19](https://react.dev)
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com)
+- **Icons:** [Lucide React](https://lucide.dev)
+- **Language:** [TypeScript](https://www.typescriptlang.org)
+
 
 ## ⚙️ links
 
