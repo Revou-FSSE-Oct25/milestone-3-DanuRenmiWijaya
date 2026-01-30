@@ -9,8 +9,6 @@ In this project, i build some e-commerce website called ReVoShop. You can choose
 
 ## 🛠️ Tech Stack
 
-## 🛠️ Tech Stack
-
 - **Framework:** [Next.js 16 (App Router)](https://nextjs.org)
 - **Library:** [React 19](https://react.dev)
 - **Styling:** [Tailwind CSS v4](https://tailwindcss.com)
