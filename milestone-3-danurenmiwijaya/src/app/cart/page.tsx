@@ -53,10 +53,12 @@ const CartContent = () => {
                             <p className="font-medium">${cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</p>
                         </div>
                     </div>
-                    <button className="w-full bg-gray-800 hover:bg-gray-900 transition-all duration-300 text-white p-2 rounded-lg cursor-pointer flex items-center justify-center gap-2">
+                    {activeStep===1 && (
+                        <button onClick={()=>router.push("/cart?step=2", {scroll:false})} 
+                    className="w-full bg-gray-800 hover:bg-gray-900 transition-all duration-300 text-white p-2 rounded-lg cursor-pointer flex items-center justify-center gap-2">
                         Continue
                         <ArrowRight className="w-3 h-3" />
-                    </button>
+                    </button>)}
                 </div>
             </div>
         </div>
