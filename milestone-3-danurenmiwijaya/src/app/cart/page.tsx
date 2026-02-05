@@ -1,12 +1,12 @@
 "use client"
 
 import { Suspense, useState } from "react"; // 1. Import Suspense
-import { CartItemsType } from "@/components/types";
+import { CartItemsType, shippingFormInputs } from "@/components/types";
 import { ArrowRight, Trash2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ShippingForm from "@/components/ShippingForm";
-import PaymentForm from "@/components/PaymentForm";
 import Image from "next/image";
+import PaymentForm from "@/components/PaymentForm";
 
 const steps = [
     { id: 1, tittle: "Shopping Cart" },
@@ -74,7 +74,7 @@ const cartItems: CartItemsType = [
 const CartContent = () => {
     const searchParams = useSearchParams()
     const router = useRouter()
-    const [shippingForm,setShippingForm] = useState(null);
+    const [shippingForm,setShippingForm] = useState<shippingFormInputs>();
 
     const activeStep = parseInt(searchParams.get("step") || "1")
 
