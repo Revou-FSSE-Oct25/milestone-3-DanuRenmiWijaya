@@ -1,8 +1,8 @@
 [build]
-  base = "https://github.com/Revou-FSSE-Oct25/milestone-3-DanuRenmiWijaya" 
   command = "npm run build"
   publish = ".next"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
 
