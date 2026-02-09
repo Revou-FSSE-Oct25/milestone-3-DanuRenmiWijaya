@@ -115,6 +115,7 @@ const product:ProductsType = [
   },
 ];
 
+
 const ProductList = ({category,params}:{category:string, params:"homepage" | "products"}) => {
     return (
         <div className='w-full'>
@@ -122,7 +123,7 @@ const ProductList = ({category,params}:{category:string, params:"homepage" | "pr
             {params === "products" && <Filter/>}
             <div className='grid grid-cols sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12'>
                 {product.map(product=>(
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard key={product.id} product={product}/>
 
                 ))}
             </div>

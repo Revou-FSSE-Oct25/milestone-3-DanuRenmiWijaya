@@ -5,12 +5,15 @@ import { ProductType } from "./types"
 import Image from "next/image"
 import { ShoppingCart } from "lucide-react"
 import { useState } from "react"
+import useCartStore from "@/stores/cartStore"
 
 const ProductCard = ({product}:{product:ProductType}) => {
     const [productsTypes,setProductTypes] = useState({
     size:product.sizes[0],
     color:product.colors[0]
-    })
+    });
+
+    const addToCart = useCartStore ((state) => state.addToCart );
 
     const handleProductType = ({
         type,
@@ -22,8 +25,18 @@ const ProductCard = ({product}:{product:ProductType}) => {
         setProductTypes(prev=>({
             ...prev,
             [type]: value,
-        }))
-    }
+        }));
+    };
+
+const handdleAddToCart = ()=>{
+    addToCart({
+        ...product,
+        quantity:1,
+        selectedSize:productsTypes.size,
+        selectedColor:productsTypes.color,
+    })
+}
+
     return (
         <div className='shadow-lg rounded-lg overlow-hidden'>
             <Link href={`/products/${product.id}`}>
@@ -76,7 +89,7 @@ const ProductCard = ({product}:{product:ProductType}) => {
                 </div>
                 <div className='flex items-center justify-between'>
                     <p className="font-medium">${product.price.toFixed(2)}</p>
-                    <button className="ring-1 ring-gray-200 shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-white hover:bg-black transition-all duration-300 flex items-center gap-2">
+                    <button onClick={handdleAddToCart} className="ring-1 ring-gray-200 shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-white hover:bg-black transition-all duration-300 flex items-center gap-2">
                         <ShoppingCart className="w-4 h-4"/>
                         Add to Cart</button>
                 </div>
