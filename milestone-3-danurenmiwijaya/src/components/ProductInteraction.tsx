@@ -4,6 +4,8 @@ import { Minus, Plus, PlusIcon, ShoppingCart } from "lucide-react";
 import { ProductType } from "./types"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import useCartStore from "@/stores/cartStore";
+import { toast } from "react-toastify";
 
 const ProductInteraction = ({
     product,
@@ -19,6 +21,8 @@ const ProductInteraction = ({
     const searchParams = useSearchParams();
     const [quantity,setQuantity] = useState(1)
 
+    const {addToCart} = useCartStore()
+
     const handleTypeChange = (type: string, value: string) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set(type, value);
@@ -33,6 +37,16 @@ const ProductInteraction = ({
              setQuantity(prev=>prev-1)   
             }
         }
+    }
+
+    const handleAddToCart = ()=>{
+        addToCart({
+            ...product,
+            quantity,
+            selectedColor,
+            selectedSize,
+        });
+        toast.success("Product added to cart")
     }
     return (
         <div className="flex flex-col gap-4 mt-4">
@@ -91,7 +105,7 @@ const ProductInteraction = ({
             </div>
 
             <div className="flex flex-col gap-3 mt-6">
-                <button className="w-full bg-white text-black border border-black py-3 rounded-md hover:bg-gray-50 transition-all flex items-center justify-center gap-2 font-medium cursor-pointer border">
+                <button onClick={handleAddToCart} className="w-full bg-white text-black border border-black py-3 rounded-md hover:bg-gray-50 transition-all flex items-center justify-center gap-2 font-medium cursor-pointer border">
                 <PlusIcon className="w-5 h-5"/>
                 Add to Cart
                 </button>
