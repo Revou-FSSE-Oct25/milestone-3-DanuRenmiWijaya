@@ -122,10 +122,10 @@ const ProductList = ({category,params}:{category:string, params:"homepage" | "pr
             <Categories/>
             {params === "products" && <Filter/>}
             <div className='grid grid-cols sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12'>
-                {product.map(product=>(
-                    <ProductCard key={product.id} product={product}/>
-
+                {product.map((product, index) => (
+                <ProductCard key={product.id} product={product} index={index} />
                 ))}
+
             </div>
             <Link href={category ? `/products/?category=${category}` : "/products"}
             className="flex justify-end mt-4 underline text-sm text-gray-500"

@@ -48,6 +48,8 @@ const ProductInteraction = ({
         });
         toast.success("Product added to cart")
     }
+    const isMissingSelection = !selectedSize || !selectedColor;
+
     return (
         <div className="flex flex-col gap-4 mt-4">
             {/* SIZE SELECTION */}
@@ -55,7 +57,7 @@ const ProductInteraction = ({
                 <span className="text-gray-500 font-semibold uppercase">Size</span>
                 <div className="flex items-center gap-2">
                     {product.sizes.map(size => (
-                        <div 
+                        <button // Gunakan button untuk aksesibilitas
                             key={size}
                             onClick={() => handleTypeChange("size", size)}    
                             className={`cursor-pointer border p-[2px] transition-all ${
@@ -69,7 +71,7 @@ const ProductInteraction = ({
                             }`}>
                                 {size.toUpperCase()}
                             </div>
-                        </div>
+                        </button>
                     ))}
                 </div>
             </div>
@@ -79,7 +81,7 @@ const ProductInteraction = ({
                 <span className="text-gray-500 font-semibold uppercase">Color</span>
                 <div className="flex items-center gap-2">
                     {product.colors.map(color => (
-                        <div 
+                        <button
                             key={color}
                             onClick={() => handleTypeChange("color", color)}
                             className={`w-8 h-8 rounded-full border-2 cursor-pointer transition-all ${
@@ -90,31 +92,50 @@ const ProductInteraction = ({
                         />
                     ))}
                 </div>
-                <div className="flex flex-col gap-2 text-xs">
-                    <span className="text-gray-500 font-semibold uppercase">Quantity</span>
-                    <div className="flex items-center gap-2">
-                        <button className="cursor-pointer border-1 border-gray-300 p-1" onClick={()=>handleQuantityChange("decrement")}>
-                            <Minus className="w-4 h-4"/>
-                        </button>
-                        <span>{quantity}</span>
-                        <button className="cursor-pointer border-1 border-gray-300 p-1" onClick={()=>handleQuantityChange("increment")}>
-                            <Plus className="w-4 h-4"/>
-                        </button>
-                    </div>
+            </div>
+
+            {/* QUANTITY - Dipindah keluar dari div Color */}
+            <div className="flex flex-col gap-2 text-xs">
+                <span className="text-gray-500 font-semibold uppercase">Quantity</span>
+                <div className="flex items-center gap-2">
+                    <button 
+                        className="cursor-pointer border border-gray-300 p-1 hover:bg-gray-100 disabled:opacity-50" 
+                        onClick={() => handleQuantityChange("decrement")}
+                        disabled={quantity <= 1}
+                    >
+                        <Minus className="w-4 h-4"/>
+                    </button>
+                    <span className="w-8 text-center text-sm">{quantity}</span>
+                    <button 
+                        className="cursor-pointer border border-gray-300 p-1 hover:bg-gray-100" 
+                        onClick={() => handleQuantityChange("increment")}
+                    >
+                        <Plus className="w-4 h-4"/>
+                    </button>
                 </div>
             </div>
 
+            {/* ACTION BUTTONS */}
             <div className="flex flex-col gap-3 mt-6">
-                <button onClick={handleAddToCart} className="w-full bg-white text-black border border-black py-3 rounded-md hover:bg-gray-50 transition-all flex items-center justify-center gap-2 font-medium cursor-pointer border">
-                <PlusIcon className="w-5 h-5"/>
-                Add to Cart
+                <button 
+                    onClick={handleAddToCart} 
+                    disabled={isMissingSelection}
+                    className="w-full bg-white text-black border border-black py-3 rounded-md hover:bg-gray-50 transition-all flex items-center justify-center gap-2 font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <PlusIcon className="w-5 h-5"/>
+                    Add to Cart
                 </button>
-                <button className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-all flex items-center justify-center gap-2 font-medium cursor-pointer border">
-                <ShoppingCart className="w-5 h-5"/>
-                Buy this Item
+                <button 
+                    disabled={isMissingSelection}
+                    className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-all flex items-center justify-center gap-2 font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <ShoppingCart className="w-5 h-5"/>
+                    Buy this Item
                 </button>
+                {isMissingSelection && (
+                    <p className="text-[10px] text-red-500 italic">* Please select size and color</p>
+                )}
             </div>
-
         </div>
     )
 }
