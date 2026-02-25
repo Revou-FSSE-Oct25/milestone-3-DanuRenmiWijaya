@@ -22,4 +22,4 @@ In this project, i build some e-commerce website called ReVoShop. You can choose
    https://github.com/Revou-FSSE-Oct25/milestone-3-DanuRenmiWijaya
 
 2. **Deployment**
-   https://milestone-3-danurenmiwijaya.netlify.app/
+   https://milestone3danurenmiwijaya.netlify.app/
