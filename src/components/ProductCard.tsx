@@ -11,9 +11,10 @@ import { toast } from "react-toastify"
 
 const ProductCard = ({ product, index }: { product: ProductType, index: number }) => {
     const [productsTypes, setProductTypes] = useState({
-        size: product.sizes[0],
-        color: product.colors[0]
+        size: product.sizes?.[0] || "All Size",
+        color: product.colors?.[0] || "Default"
     });
+
 
     const addToCart = useCartStore((state) => state.addToCart);
 
@@ -40,14 +41,21 @@ const ProductCard = ({ product, index }: { product: ProductType, index: number }
         toast.success("Product added to cart")
     };
 
+    const getImageUrl = () => {
+    if (product.images && typeof product.images === 'object') {
+        return product.images[productsTypes.color as keyof typeof product.images];
+    }
+    return (product as any).image || "/placeholder.png";
+    };
+
     return (
        
         <div className='shadow-lg rounded-lg overflow-hidden'>
             <Link href={`/products/${product.id}`}>
                 <div className='relative aspect-[2/3]'>
                     <Image
-    src={product.images[productsTypes.color as keyof typeof product.images]}
-    alt={product.name}
+    src={getImageUrl()}
+    alt={product.name || (product as any).title}
     fill
     
     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -69,6 +77,7 @@ const ProductCard = ({ product, index }: { product: ProductType, index: number }
                 <div className='flex items-center gap-4 text-xs'>
                     <div className='flex flex-col gap-1'>
                         <span className="text-gray-500">Size</span>
+                       {product.sizes && product.sizes.length > 0 && (
                         <select
                             name="size"
                             id="size"
@@ -81,9 +90,11 @@ const ProductCard = ({ product, index }: { product: ProductType, index: number }
                                 <option key={size} value={size}>{size.toUpperCase()}</option>
                             ))}
                         </select>
+                        )}
                     </div>
                     <div className='flex flex-col gap-1 '>
                         <span className="text-gray-500">Color</span>
+                        {product.colors && product.colors.length > 0 && (
                         <div className='flex items-center gap-2'>
                             {product.colors.map(color => (
                                 <div
@@ -98,6 +109,7 @@ const ProductCard = ({ product, index }: { product: ProductType, index: number }
                                 </div>
                             ))}
                         </div>
+                        )}
                     </div>
                 </div>
                 <div className='flex items-center justify-between mt-auto'>

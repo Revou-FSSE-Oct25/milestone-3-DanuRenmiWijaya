@@ -1,137 +1,71 @@
-import { ProductsType } from "./types"
+"use client"
+
 import Categories from "./Categories";
 import ProductCard from "./ProductCard"
 import Link from "next/link";
 import Filter from "./Filter";
+import { useEffect, useState } from "react";
+import { apiService } from "@/lib/api";
+import { ProductType } from "./types";
 
-const product:ProductsType = [
-  {
-    id: 1,
-    name: "Adidas CoreFit T-Shirt",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 39.9,
-    sizes: ["s", "m", "l", "xl", "xxl"],
-    colors: ["gray", "purple", "green"],
-    images: {
-      gray: "/products/1g.png",
-      purple: "/products/1p.png",
-      green: "/products/1gr.png",
-    },
-  },
-  {
-    id: 2,
-    name: "Puma Ultra Warm Zip",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 59.9,
-    sizes: ["s", "m", "l", "xl"],
-    colors: ["gray", "green"],
-    images: { gray: "/products/2g.png", green: "/products/2gr.png" },
-  },
-  {
-    id: 3,
-    name: "Nike Air Essentials Pullover",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 69.9,
-    sizes: ["s", "m", "l"],
-    colors: ["green", "blue", "black"],
-    images: {
-      green: "/products/3gr.png",
-      blue: "/products/3b.png",
-      black: "/products/3bl.png",
-    },
-  },
-  {
-    id: 4,
-    name: "Nike Dri Flex T-Shirt",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 29.9,
-    sizes: ["s", "m", "l"],
-    colors: ["white", "pink"],
-    images: { white: "/products/4w.png", pink: "/products/4p.png" },
-  },
-  {
-    id: 5,
-    name: "Under Armour StormFleece",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 49.9,
-    sizes: ["s", "m", "l"],
-    colors: ["red", "orange", "black"],
-    images: {
-      red: "/products/5r.png",
-      orange: "/products/5o.png",
-      black: "/products/5bl.png",
-    },
-  },
-  {
-    id: 6,
-    name: "Nike Air Max 270",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 59.9,
-    sizes: ["40", "42", "43", "44"],
-    colors: ["gray", "white"],
-    images: { gray: "/products/6g.png", white: "/products/6w.png" },
-  },
-  {
-    id: 7,
-    name: "Nike Ultraboost Pulse ",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 69.9,
-    sizes: ["40", "42", "43"],
-    colors: ["gray", "pink"],
-    images: { gray: "/products/7g.png", pink: "/products/7p.png" },
-  },
-  {
-    id: 8,
-    name: "Levi’s Classic Denim",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 59.9,
-    sizes: ["s", "m", "l"],
-    colors: ["blue", "green"],
-    images: { blue: "/products/8b.png", green: "/products/8gr.png" },
-  },
-];
+const ProductList = ({ category, params }: { category: string; params: "homepage" | "products" }) => {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const data = await apiService.getProducts();
+
+      const mappedData: ProductType[] = data.map((item: any) => ({
+        id: item.id,
+        name: item.title,
+        shortDescription: item.description.substring(0, 80) + "...",
+        description: item.description,
+        price: item.price,
+        category: item.category,
+        
+        sizes: ["S", "M", "L", "XL"], 
+        colors: ["black", "gray", "white"], 
+        
+        images: {
+          black: item.image,
+          gray: item.image,
+          white: item.image
+        }
+      }));
+
+      const filtered = category 
+        ? mappedData.filter((p) => p.category === category) 
+        : mappedData;
+
+      setProducts(filtered);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProducts();
+}, [category]);
 
 
-const ProductList = ({category,params}:{category:string, params:"homepage" | "products"}) => {
-    return (
-        <div className='w-full'>
-            <Categories/>
-            {params === "products" && <Filter/>}
-            <div className='grid grid-cols sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12'>
-                {product.map((product, index) => (
-                <ProductCard key={product.id} product={product} index={index} />
-                ))}
 
-            </div>
-            <Link href={category ? `/products/?category=${category}` : "/products"}
-            className="flex justify-end mt-4 underline text-sm text-gray-500"
-            >View all product</Link>
-        </div>
-    )
-}
+  if (loading) return <p>Product List...</p>;
 
-export default ProductList
+  return (
+    <div className='w-full'>
+      <Categories />
+      {params === "products" && <Filter />}
+      <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12'>
+        {products.map((item, index) => (
+          <ProductCard key={item.id} product={item} index={index} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ProductList;

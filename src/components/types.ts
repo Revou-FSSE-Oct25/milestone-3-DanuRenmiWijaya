@@ -1,21 +1,25 @@
 import {string, z} from "zod";
 export type ProductType = {
     id: string | number;
-    name: string;
-    shortDescription: string;
+    name: string; 
+    shortDescription?: string;
     description: string;
     price: number;
-    sizes: string[];
-    colors: string[];
-    images: Record<string, string>
+    category?: string;
+    
+    sizes?: string[]; 
+    colors?: string[];
+    
+    image?: string; 
+    images?: Record<string, string>; // Tetap untuk data lokal
 }
 
-export type ProductsType = ProductType[]
 export type CartItemType = ProductType & {
-    quantity:number;
-    selectedSize:string;
-    selectedColor:string;
+    quantity: number;
+    selectedSize?: string; 
+    selectedColor?: string;
 }
+
 
 export type CartItemsType = CartItemType []
 
