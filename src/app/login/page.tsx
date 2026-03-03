@@ -6,6 +6,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { apiService } from "@/lib/api";
+import { signIn } from "next-auth/react";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username harus diisi"),
@@ -27,22 +28,24 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    try {
-      
-      const result = await apiService.login(data);
-      
-      
-      login({ 
-        name: data.username, 
-        token: result.token 
-      });
+  try {
+    const result = await signIn("credentials", {
+      username: data.username,
+      password: data.password,
+      redirect: false,
+    });
 
+    if (result?.error) {
+      toast.error("Login Gagal, periksa kembali username/password");
+    } else {
       toast.success("Login Berhasil!");
-      router.push("/");
-    } catch (error: any) {
-      toast.error(error.message || "Login Gagal, periksa kembali username/password");
+      router.push("/dashboard");
+      router.refresh();
     }
-  };
+  } catch (error: any) {
+    toast.error("Terjadi kesalahan sistem");
+  }
+};
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-50">

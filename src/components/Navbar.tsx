@@ -3,13 +3,13 @@
 import Image from "next/image"
 import Link from "next/link"
 import SearchBar from "./SearchBar"
-import { Bell, Home, User } from "lucide-react" 
+import { Bell, Home, User, LogOut } from "lucide-react" 
 import ShoppingCarticon from "./ShoppingCarticon"
-import { useAuthStore } from "@/stores/useAuthStore";
- 
+import { useSession, signOut } from "next-auth/react";
 
 const Navbar = () => {
-    const { user, isAuthenticated, logout } = useAuthStore();
+    const { data: session, status } = useSession();
+    const isAuthenticated = status === "authenticated";
 
     return (
         <nav className="w-full flex items-center justify-between border-b border-gray-200 pb-4 px-4 md:px-8">
@@ -41,19 +41,20 @@ const Navbar = () => {
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1 text-sm font-medium text-gray-700">
                             <User className="w-4 h-4" />
-                            <span>{user?.name}</span>
+                            <span>{session?.user?.name}</span>
                         </div>
                         <button 
-                            onClick={() => logout()}
-                            className="text-xs text-red-500 hover:underline"
+                            onClick={() => signOut({ callbackUrl: "/login" })}
+                            className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 transition-colors font-medium"
                         >
+                            <LogOut className="w-3 h-3" />
                             Logout
                         </button>
                     </div>
                 ) : (
                     <Link 
                         href="/login" 
-                        className="bg-blue-600 text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-blue-700 transition-all"
+                        className="bg-blue-600 text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-blue-700 transition-all shadow-sm"
                     >
                         Sign In
                     </Link>
